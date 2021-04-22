@@ -51,7 +51,7 @@ int main(int argc, char *argv[])
 
     //printf("$FIRST LINE$\nEmail: %s, Name: %s, Lab: %s, Minutes: %s\n", secondLineEMAIL,secondLineNAME,secondLineLAB, secondLineMIN);
 
-    addZoomRecord(secondLineEMAIL,secondLineNAME ,secondLineLAB[0],atoi(secondLineMIN));
+    addZoomRecord(secondLineEMAIL,secondLineNAME ,atoi(secondLineMIN),secondLineLAB[0]);
 
     //%%%%%%%%%%%%%%%%%%%%%%%%Parsing the rest of the data%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     //printf("parsing the next lines...\n");
@@ -67,7 +67,7 @@ int main(int argc, char *argv[])
 
         //printf("$ANOTHER LINE$\nEmail: %s, Name: %s, Lab: %c, Minutes: %s\n", EMAIL,NAME,LAB[0],MIN);
 
-        addZoomRecord(EMAIL,NAME,LAB[0],atoi(MIN));
+        addZoomRecord(EMAIL,NAME,atoi(MIN),LAB[0]);
         
     }
     //printf("added all data\n");
