@@ -3,11 +3,11 @@
 #include <string.h>
 
 void addZoomRecord(char *pEmail, char *pName, int pTime, char lab);
-//struct ZoomRecord *addNewNode(char *pEmail, char *pName, int pTime, char lab);
-//struct ZoomRecord *addNode(struct ZoomRecord *head, struct ZoomRecord *newnode);
-void generateAttendance();
+void generateAttendance(char* destinationFileName);
+void freeDynamicMemory();
 struct ZoomRecord;
 struct ZoomRecord*head;
+
 
 int main(int argc, char *argv[])
 {
@@ -43,40 +43,28 @@ int main(int argc, char *argv[])
         exit(1);
     }
     //%%%%%%%%%%%%%%%%%%%%%%Parsing First Data Line%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    //printf("parsing first line...\n");
     char *secondLineEMAIL = strtok(secondLine, ",");
     char *secondLineNAME = strtok(NULL, ",");
     char *secondLineLAB = strtok(NULL, ",");
     char *secondLineMIN = strtok(NULL, ",");
-
-    //printf("$FIRST LINE$\nEmail: %s, Name: %s, Lab: %s, Minutes: %s\n", secondLineEMAIL,secondLineNAME,secondLineLAB, secondLineMIN);
-
+    //Adding the head node 
     addZoomRecord(secondLineEMAIL,secondLineNAME ,atoi(secondLineMIN),secondLineLAB[0]);
 
     //%%%%%%%%%%%%%%%%%%%%%%%%Parsing the rest of the data%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    //printf("parsing the next lines...\n");
     
     char line[200];
     while (fgets(line, 200, sourceFile))
     {
-        //printf("This is the line: %s\n", line);
         char *EMAIL = strtok(line, ",");
         char *NAME = strtok(NULL, ",");
         char *LAB = strtok(NULL, ",");
         char *MIN = strtok(NULL, ",");
-
-        //printf("$ANOTHER LINE$\nEmail: %s, Name: %s, Lab: %c, Minutes: %s\n", EMAIL,NAME,LAB[0],MIN);
-
+        //Adding the next node
         addZoomRecord(EMAIL,NAME,atoi(MIN),LAB[0]);
         
     }
-    //printf("added all data\n");
-
     generateAttendance(argv[2]);
-
-
-
-
-
+    freeDynamicMemory();
+    fclose(sourceFile);
 
 }

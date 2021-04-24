@@ -1,4 +1,4 @@
-
+//The struct that we were given
 struct ZoomRecord
 {
     char email[60]; // email of the student

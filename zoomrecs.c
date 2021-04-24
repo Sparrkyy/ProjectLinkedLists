@@ -8,19 +8,20 @@ struct ZoomRecord*head;
 
 
 
+//the function that adds a existing node to the right place in the linked list
 struct ZoomRecord *addNode(struct ZoomRecord *head, struct ZoomRecord *newnode){
-    //printf("Inserting a node: ");
+    
     struct ZoomRecord *traversingHead = head;
-
+    //Check if the node should alphabetically go before the head node
     if (strcmp(newnode->email,traversingHead->email)<0){
-        //printf("Swapped Right Away\n");
         newnode->next = head;
         head = newnode;
         return head;
     }
+    //If not, go through the list to find the node that next's node is after it. 
     while ( traversingHead->next != NULL){
         if (strcmp(newnode->email,traversingHead->next->email)<0){
-            //printf("Found the right place in line\n");
+            //this means it found the right place in line 
             struct ZoomRecord*temp= traversingHead->next;
             traversingHead->next=newnode;
             newnode->next=temp;
@@ -28,15 +29,12 @@ struct ZoomRecord *addNode(struct ZoomRecord *head, struct ZoomRecord *newnode){
         }
         traversingHead=traversingHead->next;
     }
-    if (traversingHead->next==NULL){
-        //printf("Adding to the end of the line\n");
-        traversingHead->next=newnode;
-        return head;
-    }
-    printf("$$$$$$$$$$should not reach here$$$$$$$$$$$$$$$$\n");
+    //If it simply reached the end of the list, then add to the end of the list
+    traversingHead->next=newnode;
     return head;
 }
 
+//Custom string copy function cause the normal one was causing errors
 void StringCopy(char *sender, char *dest)
 {
     int i = 0;
@@ -48,24 +46,26 @@ void StringCopy(char *sender, char *dest)
     dest[i] = '\0';
 }
 
+//creates a new node, and returns it
 struct ZoomRecord *addNewNode(char *pEmail, char *pName, int pTime, char lab)
 {
-    //printf("Running add new node..\n");
+    //Creating the node and memory checking
     struct ZoomRecord *newnode = malloc(sizeof(struct ZoomRecord));
     if (newnode == NULL)
     {
         printf("Error! program run out of memory");
         exit(1);
     }
+
+    //Copying all the information to the node
     StringCopy(pEmail, newnode->email);
     StringCopy(pName, newnode->name);
     for (int i=0; i<9; i++){
         newnode->durations[i]=0;
     }
-    printf("Adding node, lab: %c, in number: %d, with time: %d\n", lab, (lab-65), pTime);
     newnode->durations[lab-65] = pTime;
     newnode->next = NULL;
-    //printf("Making new node with a email of: %s\n", newnode->email);
+    
 
     return newnode;
 }
@@ -78,36 +78,33 @@ void addZoomRecord(char *pEmail, char *pName, int pTime, char pLab){
         return;
     }
     //Otherwise, look through the list to see if the email already is a node
-    //printf("searching through nodes\n");
     struct ZoomRecord* searchingNode = head;
     while ( searchingNode != NULL && strcmp(searchingNode->email,pEmail)){
-        //printf("This is the email we are looking for: %s, and the one that we are on: %s\n", pEmail, searchingNode->email);
         searchingNode=searchingNode->next;
         
     }
     //If the node was found, update the lab data.
     if (searchingNode != NULL){
-        //printf("this is the email of not null: %s\n", searchingNode->email);
         searchingNode->durations[pLab-65] = searchingNode->durations[pLab-65]+ pTime;
         return;
     }
-    //If the node was not found 
+    //If the node was not found add a new node, and then add that node to the linked list
     if (searchingNode == NULL){
-        //printf("this is the email of null: %s\n", searchingNode->email);
         newNode = addNewNode(pEmail, pName,pTime, pLab);
         head = addNode(head, newNode);
         return;
     }
 }
-
+//Generating the attendence in the destignated file 
 void generateAttendance(char* DestinationFileName){
-    printf("Made it to the output\n");
+    //Opening the file and checking it to see if it could be opened
     FILE *destFile = fopen(DestinationFileName, "wt");
     if (destFile == NULL)
     {
         printf("Error! Unable to open the output file %s\n", DestinationFileName);
         exit(1);
     }
+    //Writing all the information to the file
     fprintf(destFile, "User Email,Name (Original Name),A,B,C,D,E,F,G,H,I,Attendance (Percentage)\n");
     struct ZoomRecord *temp=head;
     while ( temp != NULL){
@@ -126,6 +123,22 @@ void generateAttendance(char* DestinationFileName){
         fprintf(destFile,"\n");
         temp=temp->next;
     }
+    //Closing the file
+    fclose(destFile);
+}
+
+//Freeing all the nodes one by one
+void freeDynamicMemory(){
+    
+   struct ZoomRecord* toFree=NULL;
+
+   while (head)
+    {
+       toFree = head;
+       head = head->next;
+       free(toFree);
+    }
+    
 }
 
 
