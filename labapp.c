@@ -72,7 +72,7 @@ int main(int argc, char *argv[])
     }
     //printf("added all data\n");
 
-    generateAttendance();
+    generateAttendance(argv[2]);
 
 
 

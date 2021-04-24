@@ -100,15 +100,30 @@ void addZoomRecord(char *pEmail, char *pName, int pTime, char pLab){
     }
 }
 
-void generateAttendance(){
-    printf("Testing generateAttendance...\n");
+void generateAttendance(char* DestinationFileName){
+    printf("Made it to the output\n");
+    FILE *destFile = fopen(DestinationFileName, "wt");
+    if (destFile == NULL)
+    {
+        printf("Error! Unable to open the output file %s\n", DestinationFileName);
+        exit(1);
+    }
+    fprintf(destFile, "User Email,Name (Original Name),A,B,C,D,E,F,G,H,I,Attendance (Percentage)\n");
     struct ZoomRecord *temp=head;
     while ( temp != NULL){
-        printf("%s", temp->email);
+        fprintf(destFile,"%s,", temp->email);
+        fprintf(destFile,"%s", temp->name);
+        int numOfAttendedLabs=0;
         for (int i=0; i<9; i++){
-            printf(",%d",temp->durations[i]);
+            fprintf(destFile,",%d",temp->durations[i]);
+            if (temp->durations[i]>=45){
+                numOfAttendedLabs++;
+            }
         }
-        printf("\n");
+        float numOfLabs=9;
+        float attendancePercentage=numOfAttendedLabs/numOfLabs;
+        fprintf(destFile, ",%.2f", attendancePercentage);
+        fprintf(destFile,"\n");
         temp=temp->next;
     }
 }
