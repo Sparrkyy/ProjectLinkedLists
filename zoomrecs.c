@@ -118,7 +118,7 @@ void generateAttendance(char* DestinationFileName){
             }
         }
         float numOfLabs=9;
-        float attendancePercentage=numOfAttendedLabs/numOfLabs;
+        float attendancePercentage=(numOfAttendedLabs/numOfLabs)*100;
         fprintf(destFile, ",%.2f", attendancePercentage);
         fprintf(destFile,"\n");
         temp=temp->next;
